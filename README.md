@@ -35,7 +35,7 @@ $ docker run -d --link myservice \
              -v $(pwd)/cert.crt:/etc/nginx/cert.crt \
              -v $(pwd)/cert.key:/etc/nginx/cert.key \
              -v $(pwd)/dh.pem:/etc/nginx/dh.pem \
-             -v $(pwd)/.htpasswd: 
+             -v $(pwd)/.htpasswd:/etc/nginx/.htpasswd \
              nginx-ssl-auth
 ```
 - Note: The '--link myservice' must match the container name and the port must match too
