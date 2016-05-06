@@ -5,6 +5,7 @@
 - Provides SSL termination using NGINX running inside a Docker container
 - Provides basic auth, using htpassword file
 - Forward requests securely to a linked container, or to another backend
+- Logs nginx access_log messages to stdout
 
 ## Usage
 - Create certificate, key and Diffie-Hellman cert
