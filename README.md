@@ -16,12 +16,25 @@ $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert
 ```
 $ htpasswd -c .htpasswd username
 ```
-- Configure FQDN in site.conf
-- Configure proxy_pass and proxy_redirect in site.conf to be the name of a linked container or another backend
-- Build image, run service container and then run the proxy container and link it to your service
+- Build image
 ```
-$ docker build -t nginx-myservice .
-$ docker run -d --name backend -p 8080:8080 dockerimage
-$ docker run -d --link backend -p 80:80 -p 443:443 nginx-myservice
+$ docker build -t nginx-ssl-auth .
 ```
-- Note: The '--link mydockerservice' will create a hosts entry in the proxy container, which must match the one in site.conf
+- Run the container you wish to proxy to
+```
+$ docker run -d --name myservice <dockerimage>
+```
+- Run the nginx-ssl-auth container, pass environment variables and mount certs/htpasswd/dhparam
+```
+$ docker run -d --link myservice \
+             -e 'LINKED_CONTAINER_NAME=myservice' \ 
+             -e 'LINKED_CONTAINER_PORT=8080' \
+             -p 80:80 \
+             -p 443:443 \
+             -v $(pwd)/cert.crt:/etc/nginx/cert.crt \
+             -v $(pwd)/cert.key:/etc/nginx/cert.key \
+             -v $(pwd)/dh.pem:/etc/nginx/dh.pem \
+             -v $(pwd)/.htpasswd: 
+             nginx-ssl-auth
+```
+- Note: The '--link myservice' must match the name used above, the port
