@@ -37,4 +37,4 @@ $ docker run -d --link myservice \
              -v $(pwd)/.htpasswd: 
              nginx-ssl-auth
 ```
-- Note: The '--link myservice' must match the name used above, the port
+- Note: The '--link myservice' must match the container name and the port must match too
